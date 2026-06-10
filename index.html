@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta http-equiv="content-language" content="en-us">
+
+    <meta name="title" content="december.sh">
+    <meta property="og:type" content="website">
+    <meta name="description" content="december">
+    <meta property="og:title" content="december.sh">
+    <meta property="og:description" content="december">
+    <title>december.sh</title>
+    <meta name="theme-color" content="#000000">
+
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/snow.js"></script>
+    <script src="js/gsap.min.js"></script>
+
+<style>
+
+@font-face {
+    font-family: 'Bilbo';
+    src: url('fonts/bilboregular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SunandMoon';
+    src: url('fonts/SunandMoon.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'TopazPlus';
+    src: url('fonts/TopazPlus.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.vortex-container {
+    position: fixed;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 500px;
+    perspective: 1000px;
+    z-index: 500;
+    pointer-events: none;
+}
+.vortex-scene {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    pointer-events: auto;
+}
+.vortex-group {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+}
+.vortex-label {
+    position: absolute;
+    left: 50%;
+    top: 5%;
+    transform: translate(-50%, -50%);
+    font-size: 52px;
+    letter-spacing: 4px;
+    opacity: 0.3;
+    text-transform: uppercase;
+    pointer-events: none;
+    white-space: nowrap;
+    font-weight: 700;
+    will-change: transform;
+}
+.vortex-card {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -90px;
+    margin-top: -140px;
+    width: 180px;
+    height: 280px;
+    transform-style: preserve-3d;
+    cursor: pointer;
+    will-change: transform, opacity;
+}
+.card-face {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: rgba(20, 20, 25, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+.card-face::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('img/bayer.png') repeat;
+    background-size: 64px 64px;
+    mix-blend-mode: color-dodge;
+    opacity: 0.12;
+    pointer-events: none;
+    z-index: 2;
+}
+.vortex-card:hover .card-face {
+    background: rgba(30, 30, 35, 0.9);
+    border-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.1), 0 10px 40px rgba(255, 255, 255, 0.08);
+}
+.card-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(0.3) contrast(1.1);
+    transition: filter 0.3s ease;
+}
+.vortex-card:hover .card-image {
+    filter: grayscale(0) contrast(1);
+}
+.card-image-placeholder {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8pt;
+    color: rgba(255,255,255,0.15);
+    letter-spacing: 2px;
+}
+.card-label {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+.vortex-card:hover .card-label {
+    background: rgba(255, 255, 255, 0.95);
+    color: #000;
+}
+.vortex-card::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 100%; height: 100%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(ellipse at center, rgba(255,255,255,0.06) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+.vortex-card:hover::after { opacity: 1; }
+
+@media (max-width: 900px) {
+    .vortex-container { height: 400px; }
+    .vortex-card { width: 140px; height: 220px; margin-left: -70px; margin-top: -110px; }
+    .card-image, .card-image-placeholder { height: 155px; }
+    .card-label { font-size: 12px; letter-spacing: 2px; }
+}
+@media (max-width: 600px) {
+    .vortex-container { height: 350px; }
+    .vortex-card { width: 120px; height: 190px; margin-left: -60px; margin-top: -95px; }
+    .card-image, .card-image-placeholder { height: 130px; }
+    .card-label { font-size: 10px; }
+}
+
+.profile-view {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 550;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 60px;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+.profile-view.active {
+    visibility: inherit;
+    opacity: 1;
+    pointer-events: auto;
+}
+.profile-card {
+    position: relative;
+    width: 260px;
+    height: 400px;
+    flex-shrink: 0;
+    background: rgba(0, 0, 0, 0.85);
+    outline: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+}
+.profile-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('img/bayer.png') repeat;
+    background-size: 64px 64px;
+    mix-blend-mode: color-dodge;
+    opacity: 0.12;
+    pointer-events: none;
+    z-index: 2;
+}
+.profile-card .card-image { height: 100%; }
+.profile-card .card-image-placeholder { height: 100%; }
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+}
+.profile-name {
+    font-family: 'Bilbo', serif;
+    font-size: 28pt;
+    font-weight: normal;
+    margin: 0;
+    letter-spacing: 1px;
+}
+.profile-tagline {
+    font-size: 11pt;
+    opacity: 0.3;
+    font-style: italic;
+    margin: 6px 0 24px 0;
+}
+.profile-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.profile-links a {
+    font-size: 10pt;
+    color: #fff;
+    text-decoration: none;
+    padding: 6px 14px;
+    outline: 1px dotted rgba(255,255,255,0.25);
+    background: rgba(0,0,0,0.9);
+    width: fit-content;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    letter-spacing: 1px;
+}
+.profile-links a:hover {
+    background: rgba(255,255,255,0.95);
+    color: #000;
+    outline: 1px solid #fff;
+}
+.profile-np {
+    margin-top: 30px;
+    font-size: 9pt;
+    font-style: italic;
+    opacity: 0.5;
+}
+.profile-np .np-label { display: block; font-weight: 700; color: #555; margin-bottom: 2px; }
+.profile-np .np-track,
+.profile-np .np-artist { display: block; color: #fff; }
+
+.back-btn {
+    position: fixed;
+    top: 20px; left: 20px;
+    z-index: 600;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 10pt;
+    cursor: pointer;
+    padding: 4px 10px;
+    outline: 1px dotted rgba(255,255,255,0.3);
+    font-style: italic;
+    transition: all 0.3s ease;
+    visibility: hidden;
+    opacity: 0;
+}
+.back-btn.visible { visibility: inherit; opacity: 1; }
+.back-btn:hover {
+    background: rgba(255,255,255,0.95);
+    color: #000;
+    outline: 1px solid #fff;
+}
+
+@media (max-width: 900px) {
+    .profile-view { flex-direction: column; gap: 30px; }
+    .profile-card { width: 180px; height: 280px; }
+    .profile-info { align-items: center; text-align: center; }
+    .profile-links { align-items: center; }
+    .profile-np { text-align: center; }
+}
+
+.landing-np {
+    position: fixed;
+    bottom: 20px; left: 20px;
+    z-index: 501;
+    font-size: 9pt;
+    font-style: italic;
+    opacity: 0.5;
+    cursor: default;
+}
+.landing-np .np-label { font-weight: 700; color: #555; }
+.landing-np .np-track,
+.landing-np .np-artist { color: #fff; }
+.landing-np .np-bar-wrap {
+    width: 130px; height: 3px;
+    background: #000; outline: 1px solid #222;
+    margin-top: 4px; overflow: hidden;
+}
+.landing-np .np-bar {
+    height: 100%; background: #fff;
+    width: 0%; transition: width 0.3s ease;
+}
+
+.copy-toast {
+    position: fixed;
+    bottom: 60px; left: 50%;
+    transform: translateX(-50%);
+    background: #fff; color: #000;
+    padding: 6px 16px; font-size: 9pt;
+    z-index: 9999;
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+.copy-toast.show { opacity: 1; visibility: visible; }
+
+.warning-toggle, .warning-banner, #settingsAlert, #settingsSet,
+#latestEntry, .statusWrapper, #openAbout, .aboutMe, .ageRating,
+.playerOpacity, #loading2, .overlayre3, .overlayre1, .overlayre2,
+.overlayScreen1, .overlayScreen2, .window1, #navigationClose,
+#button4, #navigation, #navigationTwo, .moonObject {
+    display: none !important;
+}
+
+.pageTitle {
+    visibility: visible !important;
+    left: 50% !important;
+    top: calc(50% - 240px) !important;
+    transform: translateX(-50%) translateY(-50%) !important;
+    text-align: center !important;
+    font-size: 30pt !important;
+    font-family: 'Bilbo', serif !important;
+    z-index: 501 !important;
+}
+.moon-symbol {
+    font-family: 'SunandMoon', serif;
+    font-size: 42pt;
+    display: block;
+    margin-bottom: 6px;
+    opacity: 0.6;
+    font-style: normal;
+}
+.pageTitle .fields {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    display: block;
+    margin-top: 4px;
+}
+.vulgateClementine {
+    left: 50% !important;
+    top: calc(55% + 220px) !important;
+    transform: translateX(-50%) translateY(-50%) !important;
+    text-align: center !important;
+    width: 60% !important;
+    z-index: 501 !important;
+}
+.vulgateClementine span { font-size: 11pt !important; }
+
+@media (max-width: 900px) {
+    .pageTitle { top: calc(50% - 200px) !important; font-size: 22pt !important; }
+    .vulgateClementine { top: calc(50% + 190px) !important; width: 80% !important; }
+}
+@media (max-width: 600px) {
+    .pageTitle { top: calc(50% - 180px) !important; font-size: 18pt !important; }
+    .vulgateClementine { top: calc(50% + 170px) !important; width: 90% !important; }
+    .vulgateClementine span { font-size: 9pt !important; }
+}
+
+.hidden-section {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+</style>
+
+</head>
+<body oncontextmenu="return false;">
+
+    <audio id="bgMusic" preload="auto"></audio>
+
+    <noscript>
+      <div style="width:100%;height:100%;background:#000;color:#fff;font-size:2em;z-index:9999!important;position:fixed;display:flex;align-items:center;justify-content:center;">
+        <p>This site requires JavaScript.</p>
+      </div>
+    </noscript>
+
+    <div class="pageTitle" style="opacity: 0;">
+      <span class="moon-symbol">abcdefgjklmn</span>
+      <span><i>december.sh</i></span>
+      <br>
+      <span class="fields"><i></i></span>
+    </div>
+
+    <div class="invertColors"></div>
+    <div class="blackFade"></div>
+    <img class="rainClouds" src="img/bg.gif" draggable="false" style="opacity: 1; visibility: inherit;">
+
+    <div class="portfolioWorks" style="opacity: 1; visibility: inherit;">
+      <div class="vortex-container" id="vortexContainer">
+        <div class="vortex-scene">
+          <div class="vortex-group" data-group="profiles">
+            <div id="card-eyepatch" class="vortex-card" data-index="0" data-base-angle="0" data-profile="eyepatch">
+              <div class="card-face">
+                <img class="card-image" src="img/eyepatch.jpg" alt="eyepatch" draggable="false">
+                <div class="card-label">eyepatch</div>
+              </div>
+            </div>
+            <div id="card-$p1d3r" class="vortex-card" data-index="1" data-base-angle="3.141592653589793" data-profile="$p1d3r">
+              <div class="card-face">
+                <img class="card-image" src="img/spider.jpg" alt="$p1d3r" draggable="false">
+                <div class="card-label">$p1d3r</div>
+              </div>
+            </div>
+            <div id="card-rifle" class="vortex-card" data-index="2" data-base-angle="3.141592653589793" data-profile="rifle">
+              <div class="card-face">
+                <img class="card-image" src="img/rifle.jpg" alt="rifle" draggable="false">
+                <div class="card-label">rifle</div>
+              </div>
+             </div>
+            </div>
+            <div id="card-gothic" class="vortex-card" data-index="3" data-base-angle="3.141592653589793" data-profile="gothic">
+              <div class="card-face">
+                <img class="card-image" src="img/gothic.jpg" alt="gothic" draggable="false">
+                <div class="card-label">Gothic</div>
+              </div>
+            </div>
+            <div id="card-cetin" class="vortex-card" data-index="4" data-base-angle="3.141592653589793" data-profile="cetin">
+              <div class="card-face">
+                <img class="card-image" src="img/cetin.jpg" alt="cetin" draggable="false">
+                <div class="card-label">cetin</div>
+              </div>
+            </div>
+            <div id="card-tosen" class="vortex-card" data-index="5" data-base-angle="3.141592653589793" data-profile="tosen">
+              <div class="card-face">
+                <img class="card-image" src="img/tosen.jpg" alt="tosen" draggable="false">
+                <div class="card-label">Tosen</div>
+              </div>
+            </div>
+            <div id="card-fear" class="vortex-card" data-index="6" data-base-angle="3.141592653589793" data-profile="fear">
+              <div class="card-face">
+                <img class="card-image" src="img/fear.jpg" alt="fear" draggable="false">
+                <div class="card-label">Fear</div>
+              </div>
+            </div>
+            <div id="card-broidk" class="vortex-card" data-index="7" data-base-angle="3.141592653589793" data-profile="broidk">
+              <div class="card-face">
+                <img class="card-image" src="img/broidk.jpg" alt="broidk" draggable="false">
+                <div class="card-label">Broidk</div>
+              </div>
+            </div>
+            <div id="card-mirvana" class="vortex-card" data-index="8" data-base-angle="3.141592653589793" data-profile="mirvana">
+              <div class="card-face">
+                <img class="card-image" src="img/mirvana.jpg" alt="mirvana" draggable="false">
+                <div class="card-label">Mirvana</div>
+              </div>
+            </div>
+            <div id="card-abel" class="vortex-card" data-index="9" data-base-angle="3.141592653589793" data-profile="abel">
+              <div class="card-face">
+                <img class="card-image" src="img/abel.jpg" alt="abel" draggable="false">
+                <div class="card-label">Abel</div>
+              </div>
+            </div>
+            <div id="card-yuno" class="vortex-card" data-index="10" data-base-angle="3.141592653589793" data-profile="yuno">
+              <div class="card-face">
+                <img class="card-image" src="img/yuno.jpg" alt="yuno" draggable="false">
+                <div class="card-label">Yuno</div>
+              </div>
+            </div>
+            <div id="card-kaid" class="vortex-card" data-index="11" data-base-angle="3.141592653589793" data-profile="kaid">
+              <div class="card-face">
+                <img class="card-image" src="img/kaid.jpg" alt="kaid" draggable="false">
+                <div class="card-label">Kaid</div>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="vulgateClementine">
+      <div class="verse">
+        <p id="text"></p>
+      </div>
+    </div>
+
+    <div class="landing-np" id="landing-np">
+      <span class="np-label">Now playing</span>
+      <span class="np-track" id="np-track">silence</span>
+      <span class="np-artist" id="np-artist"></span>
+      <div class="np-bar-wrap"><div class="np-bar" id="np-bar"></div></div>
+    </div>
+
+    <div id="profile-eyepatch" class="profile-view">
+      <div class="profile-card">
+        <img class="card-image" src="img/eyepatch.jpg" alt="eyepatch" draggable="false">
+      </div>
+      <div class="profile-info">
+        <h2 class="profile-name">eyepatch</h2>
+        <p class="profile-tagline">i hope cetin gets hit by a car</p>
+        <div class="profile-links">
+          <a href="https://t.me/decemberboss" target="_blank" rel="noopener">Telegram</a>
+        </div>
+        <div class="profile-np">
+          <span class="np-label">listening to</span>
+          <span class="np-track" id="np-track-eyepatch">heat</span>
+          <span class="np-artist" id="np-artist-eyepatch"></span>
+        </div>
+      </div>
+    </div>
+
+    <div id="profile-$p1d3r" class="profile-view">
+      <div class="profile-card">
+        <img class="card-image" src="img/spider.jpg" alt="$p1d3r" draggable="false">
+      </div>
+      <div class="profile-info">
+        <h2 class="profile-name">$p1d3r</h2>
+        <p class="profile-tagline">#$S</p>
+        <div class="profile-links">
+          <a href="https://t.me/swagswagswag0000" target="_blank" rel="noopener">Telegram</a>
+        </div>
+        <div class="profile-np">
+          <span class="np-label">listening to</span>
+          <span class="np-track" id="np-track-$p1d3r">Enjoy the Silence</span>
+          <span class="np-artist" id="np-artist-$p1d3r">Depeche Mode</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="profile-rifle" class="profile-view">
+      <div class="profile-card">
+        <img class="card-image" src="img/rifle.jpg" alt="rifle" draggable="false">
+      </div>
+      <div class="profile-info">
+        <h2 class="profile-name">rifle</h2>
+        <p class="profile-tagline">bossman</p>
+        <div class="profile-links">
+          <a href="https://t.me/temp73822" target="_blank" rel="noopener">Telegram</a>
+        </div>
+        <div class="profile-np">
+          <span class="np-label">listening to</span>
+          <span class="np-track" id="np-track-rifle">nigger music</span>
+          <span class="np-artist" id="np-artist-rifle">??????????</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="profile-gothic" class="profile-view">
+      <div class="profile-card">
+        <img class="card-image" src="img/gothic.jpg" alt="gothic" draggable="false">
+      </div>
+      <div class="profile-info">
+        <h2 class="profile-name">gothic</h2>
+        <p class="profile-tagline">gothick</p>
+        <div class="profile-links">
+          <a href="https://t.me/nyaaagh" target="_blank" rel="noopener">Telegram</a>
+        </div>
+        <div class="profile-np">
+          <span class="np-label">listening to</span>
+          <span class="np-track" id="np-track-gothic">?????????</span>
+          <span class="np-artist" id="np-artist-gothic">????????</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="profile-cetin" class="profile-view">
+      <div class="profile-card">
+        <img class="card-image" src="img/cetin.jpg" alt="cetin" draggable="false">
+      </div>
+      <div class="profile-info">
+        <h2 class="profile-name">cetin</h2>
+        <p class="profile-tagline">sad</p>
+        <div class="profile-links">
+          <a href="https://t.me/JadePleasePegMe" target="_blank" rel="noopener">Telegram</a>
+        </div>
+        <div class="profile-np">
+          <span class="np-label">listening to</span>
+          <span class="np-track" id="np-track-cetin">cuck anthem</span>
+          <span class="np-artist" id="np-artist-cetin"></span>
+        </div>
+      </div>
+    </div>
+
+    <div id="profile-tosen" class="profile-view">
+      <div class="profile-card">
+        <img class="card-image" src="img/tosen.jpg" alt="tosen" draggable="false">
+      </div>
+      <div class="profile-info">
+        <h2 class="profile-name">tosen</h2>
+        <p class="profile-tagline">???????</p>
+        <div class="profile-links">
+          <a href="https://t.me/godsavethe3" target="_blank" rel="noopener">Telegram</a>
+        </div>
+        <div class="profile-np">
+          <span class="np-label">listening to</span>
+          <span class="np-track" id="np-track-tosen">???????</span>
+          <span class="np-artist" id="np-artist-tosen">??????</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="profile-fear" class="profile-view">
+      <div class="profile-card">
+        <img class="card-image" src="img/fear.jpg" alt="fear" draggable="false">
+      </div>
+      <div class="profile-info">
+        <h2 class="profile-name">fear</h2>
+        <p class="profile-tagline">??????</p>
+        <div class="profile-links">
+          <a href="https://t.me/judgmental" target="_blank" rel="noopener">Telegram</a>
+        </div>
+        <div class="profile-np">
+          <span class="np-label">listening to</span>
+          <span class="np-track" id="np-track-fear">??????</span>
+          <span class="np-artist" id="np-artist-fear">?????</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="profile-broidk" class="profile-view">
+      <div class="profile-card">
+        <img class="card-image" src="img/broidk.jpg" alt="broidk" draggable="false">
+      </div>
+      <div class="profile-info">
+        <h2 class="profile-name">broidk</h2>
+        <p class="profile-tagline">im a gummy bear</p>
+        <div class="profile-links">
+          <a href="https://t.me/" target="_blank" rel="noopener">Telegram</a>
+        </div>
+        <div class="profile-np">
+          <span class="np-label">listening to</span>
+          <span class="np-track" id="np-track-broidk">retardism</span>
+          <span class="np-artist" id="np-artist-broidk">retard</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="profile-mirvana" class="profile-view">
+      <div class="profile-card">
+        <img class="card-image" src="img/mirvana.jpg" alt="mirvana" draggable="false">
+      </div>
+      <div class="profile-info">
+        <h2 class="profile-name">mirvana</h2>
+        <p class="profile-tagline">mind on the union im in love with bustin scams</p>
+        <div class="profile-links">
+          <a href="https://discord.com/users/1501861860406726747" target="_blank" rel="noopener">Discord</a>
+          <a href="https://t.me/lifetoricky" target="_blank" rel="noopener">Telegram</a>
+        </div>
+        <div class="profile-np">
+          <span class="np-label">listening to</span>
+          <span class="np-track" id="np-track-broidk">6 Dogs</span>
+          <span class="np-artist" id="np-artist-mirvana">Faygo Dreams</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="profile-abel" class="profile-view">
+      <div class="profile-card">
+        <img class="card-image" src="img/abel.jpg" alt="abel" draggable="false">
+      </div>
+      <div class="profile-info">
+        <h2 class="profile-name">abel</h2>
+        <p class="profile-tagline">cetin is a jade lover</p>
+        <div class="profile-links">
+          <a href="https://t.me/abelfh" target="_blank" rel="noopener">Telegram</a>
+        </div>
+        <div class="profile-np">
+          <span class="np-label">listening to</span>
+          <span class="np-track" id="np-track-abel">??????</span>
+          <span class="np-artist" id="np-artist-abel">?????</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="profile-yuno" class="profile-view">
+      <div class="profile-card">
+        <img class="card-image" src="img/yuno.jpg" alt="yuno" draggable="false">
+      </div>
+      <div class="profile-info">
+        <h2 class="profile-name">yuno</h2>
+        <p class="profile-tagline">???????</p>
+        <div class="profile-links">
+            <a href="https://t.me/scaryegirl" target="_blank" rel="noopener">Telegram</a>
+        </div>
+        <div class="profile-np">
+          <span class="np-label">listening to</span>
+          <span class="np-track" id="np-track-yuno">??????</span>
+          <span class="np-artist" id="np-artist-yuno">?????</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="profile-kaid" class="profile-view">
+      <div class="profile-card">
+        <img class="card-image" src="img/kaid.jpg" alt="kaid" draggable="false">
+      </div>
+      <div class="profile-info">
+        <h2 class="profile-name">kaid</h2>
+        <p class="profile-tagline">????????</p>
+        <div class="profile-links">
+            <a href="https://t.me/" target="_blank" rel="noopener">Telegram</a>
+        </div>
+        <div class="profile-np">
+          <span class="np-label">listening to</span>
+          <span class="np-track" id="np-track-kaid">??????</span>
+          <span class="np-artist" id="np-artist-kaid">?????</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="back-btn" id="backBtn">&larr; return</button>
+
+    <div class="flicker"></div>
+    <div class="saturate"></div>
+    <div class="coloradjust"></div>
+    <div class="contrastadjust"></div>
+    <div class="matrix"></div>
+    <div class="matrix2"></div>
+    <div class="matrix3"></div>
+    <div class="matrix4"></div>
+    <div class="matrix5"></div>
+
+
+<script>
+(function() {
+    const container = document.getElementById('vortexContainer');
+    if (!container) return;
+
+    const cards = container.querySelectorAll('.vortex-card');
+    const totalCards = cards.length;
+
+    let currentAngle = 0;
+    let targetAngle = 0;
+    let isDragging = false;
+    let hasDragged = false;
+    let startX = 0;
+    let startAngle = 0;
+    let hoveredCard = null;
+    let autoRotateSpeed = 0;
+    let velocity = 0;
+    let hasInteracted = false;
+    let introBlend = 0;
+
+    const config = {
+        radius: 200,
+        cardSpacing: (Math.PI * 2) / totalCards,
+        tilt: -8,
+        dragSensitivity: 0.005,
+        friction: 0.95,
+        introGap: 210,
+        introSlant: 6,
+    };
+
+    if (window.innerWidth < 600) { config.radius = 120; config.introGap = 140; }
+    else if (window.innerWidth < 900) { config.radius = 160; config.introGap = 170; }
+
+    cards.forEach((card, i) => {
+        card.dataset.index = i;
+        card.dataset.baseAngle = (i * config.cardSpacing).toString();
+
+        card.addEventListener('click', (e) => {
+            if (hasDragged) { e.preventDefault(); return; }
+
+            onFirstInteraction();
+
+            const baseAngle = parseFloat(card.dataset.baseAngle);
+            const angle = baseAngle + currentAngle;
+            const z = Math.cos(angle) * config.radius;
+            const depthRatio = (z + config.radius) / (config.radius * 2);
+
+            if (depthRatio <= 0.5) {
+                const cardIndex = parseInt(card.dataset.index);
+                const currentRot = ((currentAngle % (Math.PI * 2)) + (Math.PI * 2)) % (Math.PI * 2);
+                const targetRot = (Math.PI * 2) - (cardIndex * config.cardSpacing);
+                targetAngle += targetRot - currentRot;
+                return;
+            }
+
+            const profile = card.getAttribute('data-profile');
+            if (profile && typeof showProfile === 'function') showProfile(profile);
+        });
+
+        card.addEventListener('mouseenter', () => { hoveredCard = card; autoRotateSpeed = 0; });
+        card.addEventListener('mouseleave', () => { hoveredCard = null; if (hasInteracted) autoRotateSpeed = 0.0003; });
+    });
+
+    function onFirstInteraction() {
+        if (!hasInteracted) {
+            hasInteracted = true;
+            autoRotateSpeed = 0.0003;
+        }
+    }
+
+    container.addEventListener('mousedown', (e) => {
+        onFirstInteraction();
+        isDragging = true; hasDragged = false;
+        startX = e.clientX; startAngle = targetAngle;
+        velocity = 0; container.style.cursor = 'grabbing'; autoRotateSpeed = 0;
+    });
+    document.addEventListener('mouseup', () => {
+        if (!isDragging) return;
+        isDragging = false; container.style.cursor = 'default';
+        targetAngle += velocity * 20;
+        if (hasInteracted) autoRotateSpeed = 0.0003;
+    });
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const delta = e.clientX - startX;
+        if (Math.abs(delta) > 10) hasDragged = true;
+        const newAngle = startAngle + (delta * config.dragSensitivity);
+        velocity = newAngle - targetAngle; targetAngle = newAngle;
+    });
+
+    container.addEventListener('touchstart', (e) => {
+        onFirstInteraction();
+        isDragging = true; hasDragged = false;
+        startX = e.touches[0].clientX; startAngle = targetAngle;
+        velocity = 0; autoRotateSpeed = 0;
+    }, { passive: true });
+    document.addEventListener('touchend', () => {
+        if (!isDragging) return; isDragging = false;
+        targetAngle += velocity * 20;
+        if (hasInteracted) autoRotateSpeed = 0.0003;
+    });
+    document.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        const delta = e.touches[0].clientX - startX;
+        if (Math.abs(delta) > 10) hasDragged = true;
+        const newAngle = startAngle + (delta * config.dragSensitivity);
+        velocity = newAngle - targetAngle; targetAngle = newAngle;
+    }, { passive: true });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') { onFirstInteraction(); e.preventDefault(); targetAngle -= 0.5; }
+        else if (e.key === 'ArrowRight') { onFirstInteraction(); e.preventDefault(); targetAngle += 0.5; }
+    });
+
+    let swayTime = 0;
+
+    function animate() {
+        swayTime += 0.02;
+
+        if (hasInteracted && introBlend < 1) {
+            introBlend += 0.02;
+            if (introBlend > 1) introBlend = 1;
+        }
+
+        if (!isDragging && !hoveredCard) targetAngle += autoRotateSpeed;
+        if (!isDragging) { velocity *= config.friction; targetAngle += velocity; }
+        currentAngle += (targetAngle - currentAngle) * 0.1;
+
+        cards.forEach((card, i) => {
+            const baseAngle = parseFloat(card.dataset.baseAngle);
+            const angle = baseAngle + currentAngle;
+            const swayOff = i * 0.8;
+            const swayY = Math.sin(swayTime + swayOff) * 8;
+            const swayRZ = Math.sin(swayTime * 0.5 + swayOff) * 1.5;
+
+            const introOffset = i - (totalCards - 1) / 2;
+            const introX = introOffset * config.introGap;
+            const introSlant = introOffset * config.introSlant;
+            const introZ = introOffset === 0 ? 40 : 0;
+
+            const orbX = Math.sin(angle) * config.radius;
+            const orbZ = Math.cos(angle) * config.radius;
+            const orbRotY = -angle * (180 / Math.PI);
+            const depthRatio = (orbZ + config.radius) / (config.radius * 2);
+            const isFront = depthRatio > 0.5;
+            const orbOpacity = isFront ? 1 : 0.35 + (depthRatio * 0.3);
+            const orbScale = isFront ? 1 : 0.75 + (depthRatio * 0.15);
+
+            const t = introBlend;
+            const x = introX * (1 - t) + orbX * t;
+            const z = introZ * (1 - t) + orbZ * t;
+            const rotY = introSlant * (1 - t) + orbRotY * t;
+            const opacity = 1 * (1 - t) + orbOpacity * t;
+            const scale = 1 * (1 - t) + orbScale * t;
+
+            card.style.zIndex = Math.floor(z + config.radius);
+            card.style.transform = `translateX(${x}px) translateY(${swayY}px) translateZ(${z}px) rotateY(${rotY}deg) rotateX(${config.tilt}deg) rotateZ(${swayRZ}deg)`;
+            card.style.opacity = opacity;
+            card.style.pointerEvents = 'auto';
+
+            const face = card.querySelector('.card-face');
+            if (face) face.style.transform = `scale(${scale})`;
+        });
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+    document.addEventListener('visibilitychange', () => {
+        if (hasInteracted) autoRotateSpeed = document.hidden ? 0 : 0.0003;
+    });
+})();
+</script>
+
+<script>
+(function() {
+    'use strict';
+
+    var LASTFM_USER_eyepatch = 'otter_______x';
+    var LASTFM_USER_$p1d3r  = 'x____________x0';
+    var LASTFM_API       = 'https://lastfm-last-played.biancarosa.com.br/';
+    var NP_INTERVAL      = 30000;
+
+    var DISCORD_$p1d3r  = 'what._x';
+
+    var QUOTES = [
+        'we are made of star-stuff contemplating the stars',
+        'between the wish and the thing the world lies waiting',
+        'all the atoms in your body were forged in the hearts of dying stars',
+        'the cosmos is within us — we are a way for the universe to know itself',
+        'somewhere something incredible is waiting to be known',
+        'even the darkness has arms',
+    ];
+
+    var bgMusic = document.getElementById('bgMusic');
+    var musicStarted = false;
+
+    var PLAYLIST = [
+        { src: 'audio/eyepatch.mp3', title: 'eyepatch', artist: '' },
+        { src: 'audio/spider.mp3', title: '$p1d3r', artist: '' },
+        { src: 'audio/rifle.mp3', title: 'rifle', artist: '' },
+        { src: 'audio/gothic.mp3', title: 'gothic', artist: '' },
+        { src: 'audio/cetin.mp3', title: 'cetin', artist: '' },
+        { src: 'audio/tosen.mp3', title: 'tosen', artist: '' },
+        { src: 'audio/fear.mp3', title: 'fear', artist: '' },
+        { src: 'audio/broidk.mp3', title: 'broidk', artist: '' },
+        { src: 'audio/mirvana.mp3', title: 'mirvana', artist: '' },
+        { src: 'audio/abel.mp3', title: 'abel', artist: '' },
+        { src: 'audio/yuno.mp3', title: 'yuno', artist: '' },
+        { src: 'audio/kaid.mp3', title: 'kaid', artist: '' },
+    ];
+
+    var shuffled = [];
+    var trackIndex = 0;
+
+    function shuffle(arr) {
+        var a = arr.slice();
+        for (var i = a.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+        }
+        return a;
+    }
+
+    function updateLandingNP() {
+        var track = shuffled[trackIndex];
+        if (!track) return;
+        var npTrack = document.getElementById('np-track');
+        var npArtist = document.getElementById('np-artist');
+        if (npTrack) npTrack.textContent = track.title || 'unknown';
+        if (npArtist) npArtist.textContent = track.artist || '';
+    }
+
+    bgMusic.addEventListener('timeupdate', function() {
+        var bar = document.getElementById('np-bar');
+        if (!bar || !bgMusic.duration) return;
+        bar.style.width = ((bgMusic.currentTime / bgMusic.duration) * 100) + '%';
+    });
+
+    function loadTrack(index) {
+        if (shuffled.length === 0) shuffled = shuffle(PLAYLIST);
+        trackIndex = index % shuffled.length;
+        bgMusic.src = shuffled[trackIndex].src;
+        bgMusic.load();
+        updateLandingNP();
+    }
+
+    function fadeInAndPlay() {
+        bgMusic.volume = 0;
+        bgMusic.play().then(function() {
+            musicStarted = true;
+            var vol = 0;
+            var fadeIn = setInterval(function() {
+                vol += 0.02;
+                if (vol >= 0.4) { vol = 0.4; clearInterval(fadeIn); }
+                bgMusic.volume = vol;
+            }, 50);
+        }).catch(function() {});
+    }
+
+    bgMusic.addEventListener('ended', function() {
+        trackIndex++;
+        if (trackIndex >= shuffled.length) {
+            shuffled = shuffle(PLAYLIST);
+            trackIndex = 0;
+        }
+        loadTrack(trackIndex);
+        bgMusic.play().catch(function() {});
+    });
+
+    loadTrack(0);
+
+    function tryAutoplay() {
+        if (musicStarted) return;
+        fadeInAndPlay();
+    }
+
+    document.addEventListener('click', function startOnInteraction() {
+        tryAutoplay();
+        document.removeEventListener('click', startOnInteraction);
+        document.removeEventListener('touchstart', startOnInteraction);
+    });
+    document.addEventListener('touchstart', function startOnTouch() {
+        tryAutoplay();
+        document.removeEventListener('click', startOnTouch);
+        document.removeEventListener('touchstart', startOnTouch);
+    });
+
+    (function() {
+        var el = document.getElementById('text');
+        if (!el) return;
+        var quote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+        var words = quote.split(' ');
+        el.innerHTML = words.map(function(w) {
+            return '<span style="opacity:0;visibility:hidden;">' + w + '</span>';
+        }).join(' ');
+        var spans = el.querySelectorAll('span');
+        spans.forEach(function(span, i) {
+            setTimeout(function() {
+                gsap.to(span, { autoAlpha: 1, duration: 0.8, ease: 'power2.out' });
+            }, 2000 + i * 200);
+        });
+    })();
+
+    (function() {
+        var title = document.querySelector('.pageTitle');
+        if (!title) return;
+        setTimeout(function() {
+            gsap.to(title, { opacity: 1, duration: 1.5, ease: 'power2.out' });
+        }, 500);
+    })();
+
+    var currentProfile = null;
+    var landingEls = [
+        document.querySelector('.portfolioWorks'),
+        document.querySelector('.vulgateClementine'),
+        document.querySelector('.pageTitle'),
+        document.getElementById('landing-np'),
+    ];
+    var backBtn = document.getElementById('backBtn');
+
+    window.showProfile = function(who) {
+        var profileEl = document.getElementById('profile-' + who);
+        if (!profileEl || currentProfile) return;
+        currentProfile = who;
+
+        landingEls.forEach(function(el) {
+            if (el) {
+                gsap.to(el, { autoAlpha: 0, duration: 0.6, ease: 'power2.inOut', onComplete: function() {
+                    el.classList.add('hidden-section');
+                }});
+            }
+        });
+
+        setTimeout(function() {
+            profileEl.classList.add('active');
+            gsap.fromTo(profileEl, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8, ease: 'power2.out' });
+            backBtn.classList.add('visible');
+            gsap.to(backBtn, { autoAlpha: 1, duration: 0.5, ease: 'power2.out' });
+        }, 600);
+
+        history.pushState(null, '', '#' + who);
+    };
+
+    function showLanding() {
+        if (!currentProfile) return;
+        var profileEl = document.getElementById('profile-' + currentProfile);
+
+        gsap.to(profileEl, { autoAlpha: 0, duration: 0.5, ease: 'power2.inOut', onComplete: function() {
+            profileEl.classList.remove('active');
+        }});
+        gsap.to(backBtn, { autoAlpha: 0, duration: 0.3, ease: 'power2.out', onComplete: function() {
+            backBtn.classList.remove('visible');
+        }});
+
+        setTimeout(function() {
+            landingEls.forEach(function(el) {
+                if (el) {
+                    el.classList.remove('hidden-section');
+                    gsap.to(el, { autoAlpha: 1, duration: 0.8, ease: 'power2.out' });
+                }
+            });
+        }, 400);
+
+        currentProfile = null;
+        history.pushState(null, '', window.location.pathname);
+    }
+
+    backBtn.addEventListener('click', showLanding);
+
+var VALID_PROFILES = ['eyepatch', '$p1d3r', 'gothic', 'rifle', 'cetin', 'tosen', 'fear', 'broidk', 'mirvana', 'abel', 'yuno', 'kaid'];
+
+var PROFILE_SONGS = {
+  'eyepatch': 'audio/eyepatch.mp3',
+  '$p1d3r': 'audio/spider.mp3',
+  'gothic': 'audio/gothic.mp3',
+  'rifle': 'audio/rifle.mp3',
+  'cetin': 'audio/cetin.mp3',
+  'tosen': 'audio/tosen.mp3',
+  'fear': 'audio/fear.mp3',
+  'broidk': 'audio/broidk.mp3',
+  'mirvana': 'audio/mirvana.mp3',
+  'abel': 'audio/abel.mp3',
+  'yuno': 'audio/yuno.mp3',
+  'kaid': 'audio/kaid.mp3'
+};
+
+let currentAudio = new Audio(); // reuse ONE audio object
+
+function playProfileSong(profile) {
+  const song = PROFILE_SONGS[profile];
+  if (!song) return;
+
+  currentAudio.pause();
+  currentAudio.currentTime = 0;
+
+  currentAudio.src = song;
+  currentAudio.play().catch(err => console.log(err));
+}
+
+// Attach click listeners ONLY to profiles
+VALID_PROFILES.forEach(profile => {
+  const el = document.getElementById(profile);
+
+  if (el) {
+    el.addEventListener('click', (e) => {
+      e.stopPropagation(); // prevents global click triggers
+      playProfileSong(profile);
+    });
+  }
+});
+
+    window.addEventListener('popstate', function() {
+        var hash = window.location.hash.replace('#', '');
+        if (VALID_PROFILES.indexOf(hash) !== -1) {
+            showProfile(hash);
+        } else if (currentProfile) {
+            showLanding();
+        }
+    });
+
+    (function() {
+        var hash = window.location.hash.replace('#', '');
+        if (VALID_PROFILES.indexOf(hash) !== -1) {
+            setTimeout(function() { showProfile(hash); }, 1500);
+        }
+    })();
+
+    function fetchNP(user, trackEl, artistEl, barEl) {
+        if (!user) return;
+        var url = LASTFM_API + encodeURIComponent(user) + '/latest-song';
+
+        fetch(url).then(function(r) { return r.json(); }).then(function(data) {
+            var track = data.track;
+            if (!track) return;
+            var name = track.name || 'unknown';
+            var artist = track.artist && (track.artist['#text'] || track.artist.name) || '';
+
+            if (trackEl) trackEl.textContent = name;
+            if (artistEl) artistEl.textContent = artist;
+            if (barEl) {
+                barEl.style.width = '0%';
+                requestAnimationFrame(function() { barEl.style.width = '100%'; });
+            }
+        }).catch(function() {});
+    }
+
+    function updateProfileNP(who) {
+        var user = who === 'eyepatch' ? LASTFM_USER_eyepatch : LASTFM_USER_$p1d3r;
+        if (!user) return;
+        fetchNP(user, document.getElementById('np-track-' + who), document.getElementById('np-artist-' + who), null);
+    }
+
+    updateProfileNP('eyepatch'); updateProfileNP('$p1d3r');
+    setInterval(function() {
+        updateProfileNP('eyepatch'); updateProfileNP('$p1d3r');
+    }, NP_INTERVAL);
+
+    var toast = null;
+    function showToast(text) {
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.className = 'copy-toast';
+            document.body.appendChild(toast);
+        }
+        toast.textContent = text;
+        toast.classList.add('show');
+        setTimeout(function() { toast.classList.remove('show'); }, 1800);
+    }
+
+    document.querySelectorAll('.copy-link').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            var key = link.getAttribute('data-copy');
+            var text = '';
+            if (key === 'eyepatch_discord') text = DISCORD_eyepatch;
+            if (key === '$p1d3r_discord') text = DISCORD_$p1d3r;
+            if (!text) return;
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(function() { showToast('copied: ' + text); });
+            } else {
+                var tmp = document.createElement('textarea');
+                tmp.value = text; tmp.style.position = 'fixed'; tmp.style.opacity = '0';
+                document.body.appendChild(tmp); tmp.select();
+                document.execCommand('copy'); document.body.removeChild(tmp);
+                showToast('copied: ' + text);
+            }
+        });
+    });
+
+    document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+})();
+</script>
+
+</body></html>
+
+
