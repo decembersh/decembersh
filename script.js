@@ -348,13 +348,13 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             song: "assets/audio/gothic.mp3"
         },
-        wine: {
-            name: "wine",
-            image: "assets/images/wine.png",
+        swag: {
+            name: "swag",
+            image: "assets/images/swag.png",
             links: {
-                telegram: "https://t.me/snitch"
+                telegram: "https://t.me/+88807026594"
             },
-            song: "assets/audio/wine.mp3"
+            song: "assets/audio/swag.mp3"
         },
         cetin: {
             name: "cetin",
